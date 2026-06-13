@@ -1,6 +1,6 @@
 const express=require('express');
 const router=express.Router();
-const{createblog,getblog,getblogbyid,updateblog,deleteblog,likeblog}=require('../controllers/blogcontroller');
+const{createblog,getblog,getblogbyid,updateblog,deleteblog,likeblog,saveblog,searchblogs}=require('../controllers/blogcontroller');
 const{ commentblog, deletecommentblog, editcomment,likecomment,addnestedcomment}=require('../controllers/commentcontroller');
 const verifyuser = require('../middlwares/auth');
 const upload = require('../utils/multer');
@@ -20,5 +20,9 @@ router.patch('/blogs/comment/:id',verifyuser,editcomment);
 router.patch('/blogs/comment/like/:id',verifyuser,likecomment);
 //for nested comment
 router.post('/blogs/comment/:parentcommentid/:id',verifyuser,addnestedcomment);
+
+router.patch("/save-blog/:id",verifyuser,saveblog)
+
+router.get("/search-blogs",searchblogs)
 
 module.exports=router;

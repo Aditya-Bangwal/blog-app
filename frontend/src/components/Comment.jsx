@@ -30,14 +30,14 @@ function Comment() {
 
                 }
             })
-            console.log("comments",res.data.newcomment)
+            
             toast.success(res.data.message)
             dispatch(setcomments(res.data.newcomment))
             setcomment("")
             setcomment("")
             
         } catch (error) {
-            console.log(error)
+           
             toast.error(error?.response?.data?.message || error.message)
             
         }
@@ -92,7 +92,7 @@ function Displaycomment({comments,userId,blogId,token,activereply,setactivereply
 
                 }
             })
-            console.log("comments",res.data.newcomment)
+            
             toast.success(res.data.message)
             setreply("")
              setactivereply(null)
@@ -100,7 +100,7 @@ function Displaycomment({comments,userId,blogId,token,activereply,setactivereply
              
             
         } catch (error) {
-            console.log(error)
+          
             toast.error(error?.response?.data?.message+"its not working" || error.message+"its not working")
             
         }
@@ -108,7 +108,7 @@ function Displaycomment({comments,userId,blogId,token,activereply,setactivereply
     }
     async function handlecommentlike(commentid)
     {
-        console.log(commentid)
+       
         try {
             let res=await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/blogs/comment/like/${commentid}`,
                    {},
@@ -120,7 +120,7 @@ function Displaycomment({comments,userId,blogId,token,activereply,setactivereply
             }
            
             )
-             console.log(res)
+            
              toast.success(res.data.message)
               dispatch(setcommentlikes({commentid,userId}))
 
@@ -150,7 +150,7 @@ function Displaycomment({comments,userId,blogId,token,activereply,setactivereply
             }
            
             )
-             console.log(res)
+             
              setupdcomment("")
              dispatch(setUpdatedcomment(res.data.updatedcomment))
              toast.success(res.data.message)
@@ -182,7 +182,7 @@ function Displaycomment({comments,userId,blogId,token,activereply,setactivereply
             }
            
             )
-             console.log(res)
+            // console.log(res)
             //  setupdcomment("")
              dispatch(deletecommentandreply(id))
              toast.success(res.data.message)

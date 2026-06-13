@@ -1,9 +1,9 @@
 const { verifyjwt } = require("../utils/generatetoken");
 
 const verifyuser=async(req,res,next)=>{
-    console.log("in verify user");
+    
     const authHeader = req.headers.authorization;
-    console.log("authheader",authHeader);
+   
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(400).json({
@@ -28,7 +28,7 @@ const verifyuser=async(req,res,next)=>{
             message:"please sign in",
         })
        }
-       console.log(user);
+      
        req.user=user.id;
        
        next();

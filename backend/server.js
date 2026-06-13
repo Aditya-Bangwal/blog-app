@@ -1,4 +1,6 @@
 require("dotenv").config()//env file object
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
 const express=require('express');
 const mongoose=require('mongoose');
 const cors=require('cors');
@@ -10,20 +12,21 @@ const user=require('./models/userm');
 const userroutes=require('./routes/userroutes');
 const blogroutes=require('./routes/blogroutes');
 const cloudinaryconfig = require('./config/cloudinary');
+const { PORT } = require("./config/dotenv.config");
 
-console.log("DB_URL:", process.env.DB_URL);
+
 
  app.use('/u',userroutes);
 app.use('/b',blogroutes);
 
 
 
-const PORT=process.env.PORT
+const port=PORT
 app.use('/',(req,res)=>{
     res.send("its working fine i guess....");
 })
 
-app.listen(PORT,()=>{
+app.listen(port,()=>{
     console.log("server started....");
     dbconnect();
     cloudinaryconfig();
