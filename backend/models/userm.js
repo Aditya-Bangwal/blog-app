@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const { googleAuth } = require('../../frontend/src/utils/firebase');
+
 const userschema= new mongoose.Schema({
     name:{
         type :String,
