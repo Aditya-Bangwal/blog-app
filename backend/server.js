@@ -6,7 +6,15 @@ const mongoose=require('mongoose');
 const cors=require('cors');
 const app=express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      process.env.FRONTEND_URL,
+    ],
+    credentials: true,
+  })
+);
 const dbconnect=require('./config/dbConnect');
 const user=require('./models/userm');
 const userroutes=require('./routes/userroutes');
@@ -22,9 +30,9 @@ app.use('/b',blogroutes);
 
 
 const port=PORT
-app.use('/',(req,res)=>{
-    res.send("its working fine i guess....");
-})
+app.get('/', (req, res) => {
+    res.send("Blog API is running");
+});
 
 app.listen(port,()=>{
     console.log("server started....");
