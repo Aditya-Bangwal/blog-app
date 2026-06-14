@@ -5,7 +5,7 @@ import { formatdate } from "../utils/formatdate";
 import { handlesaveblog } from "../pages/Blogpage";
 import { useSelector } from "react-redux";
 import Displayblogs from "./Displayblogs";
-import Usepagination from "../hooks/usepagination";
+import Usepagination from "../hooks/Usepagination";
 
 function Homepage() {
   const { token, id: userId } = useSelector((slice) => slice.user);

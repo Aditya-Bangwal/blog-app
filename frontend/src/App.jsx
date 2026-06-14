@@ -9,6 +9,7 @@ import Verifyuser from './components/Verifyuser'
 import Profilepage from './pages/Profilepage'
 import Editprofile from './pages/Editprofile'
 import Searchblogs from './pages/Searchblogs'
+
 import Setting from './components/Setting'
 
 function App() {
@@ -16,7 +17,9 @@ function App() {
 
   return (
     <div className=' w-screen min-h-screen  '>
+      
     <Routes className=''>
+      
       <Route path='/' element={<Navbar/>}>
       <Route path="/" element={<Homepage/>}></Route>
       <Route path="/signin" element={<Authform type={"signin"}/>}></Route>

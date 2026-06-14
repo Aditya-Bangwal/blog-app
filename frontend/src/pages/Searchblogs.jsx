@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams, useSearchParams } from "react-router-dom";
 import { handlesaveblog } from "../pages/Blogpage";
 import Displayblogs from "../components/Displayblogs";
-import Usepagination from "../hooks/usepagination";
+import Usepagination from "../hooks/Usepagination";
 
 function Searchblogs() {
   const [searchparams] = useSearchParams();
