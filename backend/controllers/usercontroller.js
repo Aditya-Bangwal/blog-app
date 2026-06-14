@@ -36,8 +36,11 @@ admin.initializeApp({
 
 
 async function createuser(req, res) {
-  const { name, password, email } = req.body;
+
+   console.log("SIGNUP HIT");
   console.log(req.body);
+  const { name, password, email } = req.body;
+ 
 
   try {
     if (!name || !password || !email) {
@@ -123,6 +126,7 @@ async function createuser(req, res) {
       // },
     });
   } catch (err) {
+    console.error("SIGNUP ERROR:", err);
     return res.status(500).json({
       success: false,
       message: err.message,
