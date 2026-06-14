@@ -117,13 +117,7 @@ async function createuser(req, res) {
     return res.status(200).json({
       success: true,
       message: "Please check your Email to verify your account",
-      // user:{
-      //     id : newuser._id,
-      //     name:newuser.name,
-      //     email:newuser.email,
-      //     blogs:newuser.blogs,
-      //     token
-      // },
+      
     });
   } catch (err) {
     console.error("SIGNUP ERROR:", err);
