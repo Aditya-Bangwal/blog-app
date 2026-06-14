@@ -251,7 +251,11 @@ async function login(req, res) {
       });
     }
 
-    const check = await user.findOne({ email });
+    const check = await user
+  .findOne({ email })
+  .select(
+    "+password verify name email profilepic username bio showlikeBlogs showsavedBlogs"
+  );
 
     if (!check) {
       return res.status(400).json({
