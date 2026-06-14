@@ -307,12 +307,7 @@ console.log("PASSWORD FROM DB:", check.password);
   }
 }
 
-module.exports = {
-  createuser,
-  verifytoken,
-  googleAuth,
-  login,
-};
+
 
 async function getuser(req, res) {
   try {
