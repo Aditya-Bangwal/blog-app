@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../utils/userslice";
 import Input from "../components/Input";
 import { googleAuth } from "../utils/firebase";
+import googleIcon from "../assets/google-icon-logo-svgrepo-com.svg";
 
 function Authform({ type }) {
   const [userdata, setuserdata] = useState({
@@ -125,7 +126,7 @@ function Authform({ type }) {
           >
             <img
               className="w-10 h-10"
-              src="./src/assets/google-icon-logo-svgrepo-com.svg"
+              src={googleIcon}
               alt=""
             />
             <div className="font-bold">Sign in with Google</div>
