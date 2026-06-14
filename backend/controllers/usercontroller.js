@@ -36,61 +36,64 @@ admin.initializeApp({
 
 
 async function createuser(req, res) {
-
-   console.log("SIGNUP HIT");
+  console.log("SIGNUP HIT");
   console.log(req.body);
+
   const { name, password, email } = req.body;
- 
 
   try {
     if (!name || !password || !email) {
       return res.status(400).json({
         success: false,
-        message: "please fill all fields",
+        message: "Please fill all fields",
       });
     }
+
     const check = await user.findOne({ email });
+
+    // ---------------- USER EXISTS ----------------
     if (check) {
       if (check.googleAuth) {
         return res.status(400).json({
-          success: true,
-          message: "This email alredy registered,please continue with google",
-          user: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            token,
-          },
+          success: false,
+          message: "Email already registered with Google",
         });
       }
+
       if (check.verify) {
         return res.status(400).json({
           success: false,
-          message: "user already registered with this email",
-        });
-      } else {
-        let verificationtoken = await generatejwt({
-          email: check.email,
-          id: check._id,
-        });
-        const sendingemail = await transporter.sendMail({
-          from: EMAIL_USER,
-          to: check.email,
-          subject: "Email verification",
-          text: "Hello world?",
-          html: `<h1>Click on the link to verify</h1>
-               <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">Verify user</a>`,
-        });
-        return res.status(200).json({
-          success: true,
-          message: "Please check your Email to verify your account",
+          message: "User already exists",
         });
       }
+
+      // resend verification
+      const verificationtoken = await generatejwt({
+        email: check.email,
+        id: check._id,
+      });
+
+      transporter.sendMail({
+        from: EMAIL_USER,
+        to: check.email,
+        subject: "Verify your email",
+        html: `
+          <h2>Verify your account</h2>
+          <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
+            Click to verify
+          </a>
+        `,
+      }).catch(err => console.log("Email error:", err.message));
+
+      return res.status(200).json({
+        success: true,
+        message: "Verification email sent again",
+      });
     }
 
+    // ---------------- CREATE USER ----------------
     const hashedpassword = await bcrypt.hash(password, 10);
-    const uniqueSuffix = uidInstance.rnd();
-    const username = email.split("@")[0] + uniqueSuffix;
+    const username = email.split("@")[0] + uidInstance.rnd();
 
     const newuser = await user.create({
       name,
@@ -99,26 +102,29 @@ async function createuser(req, res) {
       username,
     });
 
-    let verificationtoken = await generatejwt({
+    const verificationtoken = await generatejwt({
       email: newuser.email,
       id: newuser._id,
     });
-    //   console.log("inusercontroller",token);
 
-    const sendingemail = await transporter.sendMail({
+    // ---------------- EMAIL (NON BLOCKING) ----------------
+    transporter.sendMail({
       from: EMAIL_USER,
       to: newuser.email,
-      subject: "Email verification",
-      text: "Hello world?",
-      html: `<h1>Click on the link to verify</h1>
-               <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">Verify user</a>`,
-    });
+      subject: "Verify your email",
+      html: `
+        <h2>Welcome!</h2>
+        <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
+          Click here to verify your account
+        </a>
+      `,
+    }).catch(err => console.log("Email failed:", err.message));
 
     return res.status(200).json({
       success: true,
-      message: "Please check your Email to verify your account",
-      
+      message: "User created. Check email to verify account.",
     });
+
   } catch (err) {
     console.error("SIGNUP ERROR:", err);
     return res.status(500).json({
@@ -128,31 +134,31 @@ async function createuser(req, res) {
   }
 }
 
+/* ---------------- VERIFY EMAIL ---------------- */
+
 async function verifytoken(req, res) {
   try {
-    console.log("VERIFY ROUTE HIT");
-    console.log(req.params);
     const { verificationtoken } = req.params;
-    const verifytoken = await verifyjwt(verificationtoken);
-    if (!verifytoken) {
+
+    const decoded = await verifyjwt(verificationtoken);
+
+    if (!decoded) {
       return res.status(400).json({
         success: false,
-        message: "Invalid token/email expired",
+        message: "Invalid or expired token",
       });
     }
 
-    const { id } = verifytoken;
-    const userverify = await user.findByIdAndUpdate(
-      id,
-      {
-        verify: true,
-      },
-      { new: true },
+    const updatedUser = await user.findByIdAndUpdate(
+      decoded.id,
+      { verify: true },
+      { new: true }
     );
-    if (!userverify) {
+
+    if (!updatedUser) {
       return res.status(400).json({
         success: false,
-        message: "Invalid token/email expired",
+        message: "User not found",
       });
     }
 
@@ -160,59 +166,60 @@ async function verifytoken(req, res) {
       success: true,
       message: "Email verified successfully",
     });
-  } catch (error) {
+
+  } catch (err) {
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 }
 
+/* ---------------- GOOGLE AUTH ---------------- */
+
 async function googleAuth(req, res) {
   try {
     const { accessToken } = req.body;
+
     const decodedToken = await getAuth().verifyIdToken(accessToken);
     const { name, email } = decodedToken;
 
     let userauth = await user.findOne({ email });
-    if (userauth) {
-      if (userauth.googleAuth) {
-        let token = await generatejwt({
-          email: userauth.email,
-          id: userauth._id,
-        });
 
-        res.status(200).json({
-          success: true,
-          message: "Loggen in successfully",
-          user: {
-            id: userauth._id,
-            name: userauth.name,
-            email: userauth.email,
-            token,
-          },
-        });
-      } else {
-        return res.status(400).json({
-          success: true,
-          message: "This email alredy registered,please try without google",
-        });
-      }
+    if (userauth) {
+      const token = await generatejwt({
+        email: userauth.email,
+        id: userauth._id,
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Login successful",
+        user: {
+          id: userauth._id,
+          name: userauth.name,
+          email: userauth.email,
+          token,
+        },
+      });
     }
 
-    const uniqueSuffix = uidInstance.rnd();
-    const username = email.split("@")[0] + uniqueSuffix;
+    const username = email.split("@")[0] + uidInstance.rnd();
 
-    let newuser = await user.create({
+    const newuser = await user.create({
       name,
       email,
       googleAuth: true,
       verify: true,
       username,
     });
-    let token = await generatejwt({ email: newuser.email, id: newuser._id });
 
-    res.status(200).json({
+    const token = await generatejwt({
+      email: newuser.email,
+      id: newuser._id,
+    });
+
+    return res.status(200).json({
       success: true,
       message: "Registered successfully",
       user: {
@@ -222,95 +229,7 @@ async function googleAuth(req, res) {
         token,
       },
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-}
 
-async function login(req, res) {
-  const { password, email } = req.body;
-  console.log(req.body);
-
-  try {
-    if (!password || !email) {
-      return res.status(400).json({
-        success: false,
-        message: "please fill all fields",
-      });
-    }
-    const check = await user
-      .findOne({ email })
-      .select(
-        " password verify name email profilepic username bio showlikeBlogs showsavedBlogs ",
-      );
-    if (!check) {
-      return res.status(400).json({
-        success: false,
-        message: "user not exist",
-      });
-    }
-
-    if (check.googleAuth) {
-      return res.status(400).json({
-        success: true,
-        message: "This email alredy registered,please continue with google",
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          token,
-        },
-      });
-    }
-    let checkforpswd = await bcrypt.compare(password, check.password);
-    if (!checkforpswd) {
-      return res.status(400).json({
-        success: false,
-        message: "Incorrect password",
-      });
-    }
-    if (!check.verify) {
-      let verificationtoken = await generatejwt({
-        email: check.email,
-        id: check._id,
-      });
-      //   console.log("inusercontroller",token);
-
-      const sendingemail = await transporter.sendMail({
-        from: EMAIL_USER,
-        to: check.email,
-        subject: "Email verification",
-        text: "Hello world?",
-        html: `<h1>Click on the link to verify</h1>
-               <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">Verify user</a>`,
-      });
-      //send verification email
-      return res.status(400).json({
-        success: false,
-        message: "Please verify your email. A validation link has been sent.",
-      });
-    }
-
-    let token = await generatejwt({ email: check.email, id: check._id });
-
-    res.status(200).json({
-      success: true,
-      message: "Logged in successfully",
-      user: {
-        id: check._id,
-        name: check.name,
-        email: check.email,
-        profilepic: check.profilepic,
-        username: check.username,
-        bio: check.bio,
-        showlikeBlogs: check.showlikeBlogs,
-        showsavedBlogs: check.showsavedBlogs,
-        token,
-      },
-    });
   } catch (err) {
     return res.status(500).json({
       success: false,
@@ -318,6 +237,75 @@ async function login(req, res) {
     });
   }
 }
+
+/* ---------------- LOGIN ---------------- */
+
+async function login(req, res) {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all fields",
+      });
+    }
+
+    const check = await user.findOne({ email });
+
+    if (!check) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const match = await bcrypt.compare(password, check.password);
+
+    if (!match) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect password",
+      });
+    }
+
+    if (!check.verify) {
+      return res.status(400).json({
+        success: false,
+        message: "Please verify your email first",
+      });
+    }
+
+    const token = await generatejwt({
+      email: check.email,
+      id: check._id,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user: {
+        id: check._id,
+        name: check.name,
+        email: check.email,
+        token,
+      },
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+}
+
+module.exports = {
+  createuser,
+  verifytoken,
+  googleAuth,
+  login,
+};
 
 async function getuser(req, res) {
   try {
