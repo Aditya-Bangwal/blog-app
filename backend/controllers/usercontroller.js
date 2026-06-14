@@ -260,6 +260,13 @@ async function login(req, res) {
       });
     }
 
+
+console.log(check);
+console.log("LOGIN BODY:", req.body);
+console.log("DB USER:", check);
+console.log("PASSWORD FROM BODY:", password);
+console.log("PASSWORD FROM DB:", check.password);
+
     const match = await bcrypt.compare(password, check.password);
 
     if (!match) {
