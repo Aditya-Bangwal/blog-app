@@ -2,11 +2,18 @@ const user = require("../models/userm");
 const bcrypt = require("bcrypt");
 const { generatejwt, verifyjwt } = require("../utils/generatetoken");
 const transporter = require("../utils/transporter");
+const {
+  FIREBASE_PROJECT_ID,
+  FIREBASE_PRIVATE_KEY_ID,
+  FIREBASE_PRIVATE_KEY,
+  FIREBASE_CLIENT_EMAIL,
+  FIREBASE_CLIENT_ID,
+} = require("../config/dotenv.config");
 
 const admin = require("firebase-admin");
 const { getAuth } = require("firebase-admin/auth");
 
-const serviceAccount = require("../config/firebaseAdmin.json");
+
 
 const ShortUniqueId = require("short-unique-id");
 const { uploadimage, deleteimagefromcloud } = require("../utils/uploadimage");
@@ -16,8 +23,17 @@ const uidInstance = new ShortUniqueId({ length: 10 });
 const { randomUUID } = new ShortUniqueId({ length: 10 });
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert({
+    type: "service_account",
+    project_id: FIREBASE_PROJECT_ID,
+    private_key_id: FIREBASE_PRIVATE_KEY_ID,
+    private_key: FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    client_email: FIREBASE_CLIENT_EMAIL,
+    client_id: FIREBASE_CLIENT_ID,
+  }),
 });
+
+
 
 async function createuser(req, res) {
   const { name, password, email } = req.body;
