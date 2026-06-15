@@ -15,6 +15,7 @@ import Displayblogs from "../components/Displayblogs";
 
 function Profilepage() {
   const { username } = useParams();
+  console.log("PROFILE USERNAME:", username);
   const [userdata, setuserdata] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();

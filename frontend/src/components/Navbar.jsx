@@ -11,6 +11,8 @@ function Navbar() {
     (state) => state.user,
   );
 
+  console.log("Navbar username",username);
+
   const [showpopup, setshowpopup] = useState(false);
   const [searchquery, setsearchquery] = useState(null);
   const dispatch = useDispatch();

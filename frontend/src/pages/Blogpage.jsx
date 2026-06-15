@@ -127,7 +127,7 @@ function Blogpage() {
           </h1>
           <div className="flex items-center gap-5">
             <div>
-              <Link to={`/@${blogdata?.creator?.username}`}>
+              <Link to={`/${blogdata?.creator?.username}`}>
                 <div
                   onClick={() => setshowpopup((prev) => !prev)}
                   className="cursor-pointer text-xl font-bold  capitalize"
