@@ -21,12 +21,26 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export async function googleAuth() {
-  const result = await signInWithPopup(auth, provider);
+    try {
+         console.log("Opening Google popup");
 
-  const accessToken = await result.user.getIdToken();
+    const result = await signInWithPopup(auth, provider);
+
+    console.log("Popup success", result);
+
+    const accessToken = await result.user.getIdToken();
+
 
   return {
     accessToken,
     user: result.user,
   };
+        
+    }
+     catch (error) {
+   console.error("FIREBASE ERROR:", error);
+  throw error;
+        
+    }
+  
 }

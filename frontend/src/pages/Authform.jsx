@@ -123,7 +123,7 @@ const res = await axios.post(
               </div>
             )}
           </div>
-          <div
+          <button
             type="button"
             onClick={handlegoogleauth}
             className="bg-white cursor-pointer hover:bg-blue-100 flex max-w-[75%] p-3 justify-center items-center gap-5 rounded-full"
@@ -134,7 +134,7 @@ const res = await axios.post(
               alt=""
             />
             <div className="font-bold">Sign in with Google</div>
-          </div>
+          </button>
         </form>
       </div>
     </div>
