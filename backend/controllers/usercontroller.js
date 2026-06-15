@@ -73,7 +73,7 @@ async function createuser(req, res) {
         id: check._id,
       });
 
-      transporter.sendMail({
+      const info = transporter.sendMail({
         from: EMAIL_USER,
         to: check.email,
         subject: "Verify your email",
@@ -83,7 +83,9 @@ async function createuser(req, res) {
             Click to verify
           </a>
         `,
+
       }).catch(err => console.log("Email error:", err.message));
+      console.log(info)
 
       return res.status(200).json({
         success: true,
@@ -108,7 +110,7 @@ async function createuser(req, res) {
     });
 
   
-    transporter.sendMail({
+    const info = transporter.sendMail({
       from: EMAIL_USER,
       to: newuser.email,
       subject: "Verify your email",
@@ -119,6 +121,7 @@ async function createuser(req, res) {
         </a>
       `,
     }).catch(err => console.log("Email failed:", err.message));
+    console.log(info)
 
     return res.status(200).json({
       success: true,

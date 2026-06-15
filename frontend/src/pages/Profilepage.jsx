@@ -134,14 +134,7 @@ console.log("FULL USER STATE:", userState);
                 </li>
               ) : null}
 
-              <li className="cursor-pointer">
-                <Link
-                  to={`/${username}/liked-blogs`}
-                  className={`${location.pathname == `/${username}/liked-blogs` ? "border-b-2 border-black" : ""} pb-1`}
-                >
-                  Liked Blogs
-                </Link>
-              </li>
+             
               {userdata._id == userId ? (
                 <li className="cursor-pointer">
                   <Link
