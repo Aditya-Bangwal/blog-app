@@ -17,6 +17,8 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((error, success) => {
   if (error) {
+    console.log("SMTP_USER:", process.env.SMTP_USER);
+    console.log("SMTP_PASS exists:", !!process.env.SMTP_PASS);
     console.log("SMTP ERROR:", error);
   } else {
     console.log("SMTP READY");

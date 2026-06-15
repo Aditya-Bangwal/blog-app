@@ -50,6 +50,8 @@ async function createuser(req, res) {
     }
 
     const check = await user.findOne({ email });
+    console.log("CHECK:", check);
+
 
     // ---------------- USER EXISTS ----------------
     if (check) {
@@ -123,10 +125,14 @@ async function createuser(req, res) {
       username,
     });
 
+    console.log("NEWUSER:", newuser);
+
     const verificationtoken = await generatejwt({
       email: newuser.email,
       id: newuser._id,
     });
+
+ 
 
   
      try {
