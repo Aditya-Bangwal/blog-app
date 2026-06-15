@@ -91,7 +91,7 @@ async function createuser(req, res) {
       });
     }
 
-    // ---------------- CREATE USER ----------------
+   
     const hashedpassword = await bcrypt.hash(password, 10);
     const username = email.split("@")[0] + uidInstance.rnd();
 
@@ -107,7 +107,7 @@ async function createuser(req, res) {
       id: newuser._id,
     });
 
-    // ---------------- EMAIL (NON BLOCKING) ----------------
+  
     transporter.sendMail({
       from: EMAIL_USER,
       to: newuser.email,
@@ -134,7 +134,7 @@ async function createuser(req, res) {
   }
 }
 
-/* ---------------- VERIFY EMAIL ---------------- */
+
 
 async function verifytoken(req, res) {
   try {
@@ -196,10 +196,12 @@ async function googleAuth(req, res) {
         success: true,
         message: "Login successful",
         user: {
-          id: userauth._id,
-          name: userauth.name,
-          email: userauth.email,
-          token,
+        id: userauth._id,
+        name: userauth.name,
+        email: userauth.email,
+        profilepic:userauth.profilepic,
+        username:userauth.username,
+        token,
         },
       });
     }
@@ -226,6 +228,8 @@ async function googleAuth(req, res) {
         id: newuser._id,
         name: newuser.name,
         email: newuser.email,
+        profilepic:newuser.profilepic,
+        username:newuser.username,
         token,
 
       },
@@ -239,7 +243,7 @@ async function googleAuth(req, res) {
   }
 }
 
-/* ---------------- LOGIN ---------------- */
+
 
 async function login(req, res) {
   const { email, password } = req.body;
