@@ -47,6 +47,7 @@ function Authform({ type }) {
   async function handlegoogleauth() {
     try {
       let data = await googleAuth();
+      console.log("Google Result:", data);
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL_USER}/google-auth`,
         {
@@ -123,6 +124,7 @@ function Authform({ type }) {
             )}
           </div>
           <div
+            type="button"
             onClick={handlegoogleauth}
             className="bg-white cursor-pointer hover:bg-blue-100 flex max-w-[75%] p-3 justify-center items-center gap-5 rounded-full"
           >
