@@ -47,13 +47,13 @@ function Authform({ type }) {
   async function handlegoogleauth() {
     try {
       let data = await googleAuth();
-      console.log("Google Result:", data);
-      const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL_USER}/google-auth`,
-        {
-          accessToken: data.accessToken,
-        },
-      );
+
+const res = await axios.post(
+  `${import.meta.env.VITE_BACKEND_URL_USER}/google-auth`,
+  {
+    accessToken: data.accessToken,
+  }
+);
 
       dispatch(login(res.data.user));
       toast.success(res.data.message);
