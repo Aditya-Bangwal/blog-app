@@ -31,10 +31,13 @@ console.log("FULL USER STATE:", userState);
         const res = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL_USER}/users/${username}`,
         );
+        console.log("PROFILE USERNAME:", username);
+       console.log("USER DATA:", userdata);
 
         setuserdata(res.data.userid);
       } catch (error) {
-        toast.error(error?.response?.data?.message || error.message);
+         console.log("PROFILE ERROR:", error.response?.data);
+       toast.error(error?.response?.data?.message || error.message);
       }
     }
 

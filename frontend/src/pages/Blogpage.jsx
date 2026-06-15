@@ -146,7 +146,7 @@ function Blogpage() {
             </div>
             <div className=" flex flex-col">
               <div className="flex items-center gap-2">
-                <Link to={`/@${blogdata?.creator?.username}`}>
+                <Link to={`/${blogdata?.creator?.username}`}>
                   <h2 className=" font-extrabold  text-xl hover:underline cursor-pointer">
                     {blogdata?.creator?.name}
                   </h2>
