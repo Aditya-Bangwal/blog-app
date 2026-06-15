@@ -85,7 +85,7 @@ async function createuser(req, res) {
         `,
 
       }).catch(err => console.log("Email error:", err.message));
-      console.log(info)
+      console.log("inside if",info)
 
       return res.status(200).json({
         success: true,
@@ -121,7 +121,7 @@ async function createuser(req, res) {
         </a>
       `,
     }).catch(err => console.log("Email failed:", err.message));
-    console.log(info)
+    console.log("newuser info",info)
 
     return res.status(200).json({
       success: true,
