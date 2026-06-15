@@ -2,6 +2,7 @@ const user = require("../models/userm");
 const bcrypt = require("bcrypt");
 const { generatejwt, verifyjwt } = require("../utils/generatetoken");
 const transporter = require("../utils/transporter");
+require("dotenv").config();
 const {
   FIREBASE_PROJECT_ID,
   FIREBASE_PRIVATE_KEY_ID,
@@ -77,7 +78,7 @@ async function createuser(req, res) {
 
       try {
   const info = await transporter.sendMail({
-        from: EMAIL_USER,
+        from: `"Blog App" <${process.env.EMAIL_USER}>`,
         to: check.email,
         subject: "Verify your email",
         html: `
@@ -137,7 +138,7 @@ async function createuser(req, res) {
   
      try {
   const info = await transporter.sendMail({
-        from: EMAIL_USER,
+        from: `"Blog App" <${process.env.EMAIL_USER}>`,
         to: newuser.email,
         subject: "Verify your email",
         html: `
