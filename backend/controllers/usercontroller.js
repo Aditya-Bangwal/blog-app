@@ -138,7 +138,7 @@ async function createuser(req, res) {
      try {
   const info = await transporter.sendMail({
         from: EMAIL_USER,
-        to: check.email,
+        to: newuser.email,
         subject: "Verify your email",
         html: `
           <h2>Verify your account</h2>
