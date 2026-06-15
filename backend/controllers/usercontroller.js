@@ -73,7 +73,8 @@ async function createuser(req, res) {
         id: check._id,
       });
 
-      const info = transporter.sendMail({
+      try {
+  const info = await transporter.sendMail({
         from: EMAIL_USER,
         to: check.email,
         subject: "Verify your email",
@@ -84,8 +85,26 @@ async function createuser(req, res) {
           </a>
         `,
 
-      }).catch(err => console.log("Email error:", err.message));
-      console.log("inside if",info)
+      });
+
+  console.log("EMAIL SENT:", info.messageId);
+} catch (err) {
+  console.log("EMAIL FAILED:", err);
+}
+
+      // const info = transporter.sendMail({
+      //   from: EMAIL_USER,
+      //   to: check.email,
+      //   subject: "Verify your email",
+      //   html: `
+      //     <h2>Verify your account</h2>
+      //     <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
+      //       Click to verify
+      //     </a>
+      //   `,
+
+      // }).catch(err => console.log("Email error:", err.message));
+      // console.log("inside if",info)
 
       return res.status(200).json({
         success: true,
@@ -110,18 +129,24 @@ async function createuser(req, res) {
     });
 
   
-    const info = transporter.sendMail({
-      from: EMAIL_USER,
-      to: newuser.email,
-      subject: "Verify your email",
-      html: `
-        <h2>Welcome!</h2>
-        <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
-          Click here to verify your account
-        </a>
-      `,
-    }).catch(err => console.log("Email failed:", err.message));
-    console.log("newuser info",info)
+     try {
+  const info = await transporter.sendMail({
+        from: EMAIL_USER,
+        to: check.email,
+        subject: "Verify your email",
+        html: `
+          <h2>Verify your account</h2>
+          <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
+            Click to verify
+          </a>
+        `,
+
+      });
+
+  console.log("EMAIL SENT:", info.messageId);
+} catch (err) {
+  console.log("EMAIL FAILED:", err);
+}
 
     return res.status(200).json({
       success: true,
