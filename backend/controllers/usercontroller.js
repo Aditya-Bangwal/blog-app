@@ -227,6 +227,7 @@ async function googleAuth(req, res) {
         name: newuser.name,
         email: newuser.email,
         token,
+
       },
     });
 
@@ -292,6 +293,12 @@ console.log("PASSWORD FROM DB:", check.password);
       id: check._id,
     });
 
+
+  console.log("LOGIN USER RESPONSE:", {
+  id: check._id,
+  username: check.username,
+  profilepic: check.profilepic,
+});
     return res.status(200).json({
       success: true,
       message: "Login successful",
@@ -299,6 +306,8 @@ console.log("PASSWORD FROM DB:", check.password);
         id: check._id,
         name: check.name,
         email: check.email,
+        profilepic:check.profilepic,
+        username:check.username,
         token,
       },
     });
@@ -340,7 +349,7 @@ async function getuserid(req, res) {
       .populate("blogs following saveBlogs likeBlogs")
       .populate({
         path: "followers following",
-        select: "name username",
+        select: "name username ",
       })
       .select("-password -isVerify -__v -email -googleAuth ");
 

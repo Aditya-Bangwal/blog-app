@@ -31,6 +31,8 @@ function Authform({ type }) {
         toast.success(res.data.message);
         navigate("/signin");
       } else {
+        console.log("LOGIN RESPONSE:", res.data.user);
+        console.log("LOGIN RESPONSE:", res.data);
         dispatch(login(res.data.user));
         toast.success(res.data.message);
         navigate("/");

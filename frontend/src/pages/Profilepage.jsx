@@ -19,6 +19,9 @@ function Profilepage() {
   const [userdata, setuserdata] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const userState = useSelector((state) => state.user);
+
+console.log("FULL USER STATE:", userState);
 
   const { token, id: userId } = useSelector((state) => state.user);
 
