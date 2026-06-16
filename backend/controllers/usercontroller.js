@@ -1,7 +1,8 @@
 const user = require("../models/userm");
 const bcrypt = require("bcrypt");
 const { generatejwt, verifyjwt } = require("../utils/generatetoken");
-const transporter = require("../utils/transporter");
+// const transporter = require("../utils/transporter");
+const sendEmail = require("../utils/sendEmail");
 require("dotenv").config();
 const {
   FIREBASE_PROJECT_ID,
@@ -79,37 +80,22 @@ async function createuser(req, res) {
       });
 
       try {
-  const info = await transporter.sendMail({
-        from: `"Blog App" <${process.env.EMAIL_USER}>`,
-        to: check.email,
-        subject: "Verify your email",
-        html: `
-          <h2>Verify your account</h2>
-          <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
-            Click to verify
-          </a>
-        `,
-
-      });
+  const info = await sendEmail(
+  check.email,
+  "Verify your email",
+  `
+  <h2>Verify your account</h2>
+  <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
+    Click to verify
+  </a>
+  `
+);
 
   console.log("EMAIL SENT:", info.messageId);
 } catch (err) {
   console.log("EMAIL FAILED:", err);
 }
 
-      // const info = transporter.sendMail({
-      //   from: EMAIL_USER,
-      //   to: check.email,
-      //   subject: "Verify your email",
-      //   html: `
-      //     <h2>Verify your account</h2>
-      //     <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
-      //       Click to verify
-      //     </a>
-      //   `,
-
-      // }).catch(err => console.log("Email error:", err.message));
-      // console.log("inside if",info)
 
       return res.status(200).json({
         success: true,
@@ -139,18 +125,16 @@ async function createuser(req, res) {
 
   
      try {
-  const info = await transporter.sendMail({
-        from: `"Blog App" <${process.env.EMAIL_USER}>`,
-        to: newuser.email,
-        subject: "Verify your email",
-        html: `
-          <h2>Verify your account</h2>
-          <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
-            Click to verify
-          </a>
-        `,
-
-      });
+  const info = await sendEmail(
+  newuser.email,
+  "Verify your email",
+  `
+  <h2>Welcome!</h2>
+  <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
+    Click here to verify your account
+  </a>
+  `
+);
 
   console.log("EMAIL SENT:", info.messageId);
 } catch (err) {
