@@ -50,8 +50,10 @@ async function createuser(req, res) {
       });
     }
 
-    const check = await user.findOne({ email });
-    console.log("CHECK:", check);
+    const check = await user
+  .findOne({ email })
+  .select("+verify +googleAuth");
+    console.log("sign up CHECK:", check);
 
 
     // ---------------- USER EXISTS ----------------

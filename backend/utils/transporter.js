@@ -12,8 +12,12 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((err, success) => {
   if (err) {
+  console.log("SMTP_USER:", process.env.SMTP_USER);
+console.log("HOST:", "smtp-relay.brevo.com");
     console.log("SMTP ERROR:", err);
   } else {
+    console.log("SMTP_USER:", process.env.SMTP_USER);
+console.log("HOST:", "smtp-relay.brevo.com");
     console.log("SMTP READY");
   }
 });
