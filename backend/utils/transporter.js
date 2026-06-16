@@ -2,22 +2,21 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
+  port: 465,          // Changed from 587
+  secure: true,       // Changed from false (true forces SSL/TLS upgrade instantly)
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  // Add timeout parameters so it fails fast if there are network constraints
+  connectionTimeout: 10000, 
+  greetingTimeout: 10000,
 });
 
 transporter.verify((err, success) => {
   if (err) {
-  console.log("SMTP_USER:", process.env.SMTP_USER);
-console.log("HOST:", "smtp-relay.brevo.com");
     console.log("SMTP ERROR:", err);
   } else {
-    console.log("SMTP_USER:", process.env.SMTP_USER);
-console.log("HOST:", "smtp-relay.brevo.com");
     console.log("SMTP READY");
   }
 });
