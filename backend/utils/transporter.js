@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
-  port: 465,          // Changed from 587
+   port: 2525,         // Changed from 587
   secure: true,       // Changed from false (true forces SSL/TLS upgrade instantly)
   auth: {
     user: process.env.SMTP_USER,
