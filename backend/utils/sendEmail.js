@@ -9,6 +9,15 @@ const brevo = new BrevoClient({
 
 async function sendEmail(to, subject, htmlContent) {
     console.log("BREVO KEY:", process.env.BREVO_API_KEY);
+    console.log("SENDER:", "adityabangwal12@gmail.com");
+    console.log("SENDING EMAIL WITH:");
+console.log({
+  sender: {
+    name: "Blog App",
+    email: "adityabangwal12@gmail.com",
+  },
+  to,
+});
   const result = await brevo.transactionalEmails.sendTransacEmail({
     sender: {
       name: "Blog App",
