@@ -84,10 +84,21 @@ async function createuser(req, res) {
   check.email,
   "Verify your email",
   `
-  <h2>Verify your account</h2>
+  <h2>Welcome to BlogApp</h2>
+
+<p>Thank you for creating an account.</p>
+
+<p>Please verify your email address by clicking the button below:</p>
+
+<p>
   <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
-    Click to verify
+    Verify Email Address
   </a>
+</p>
+
+<p>If you did not create this account, you can safely ignore this email.</p>
+
+<p>Regards,<br/>BlogApp Team</p>
   `
 );
 
@@ -99,7 +110,7 @@ async function createuser(req, res) {
 
       return res.status(200).json({
         success: true,
-        message: "Verification email sent again",
+        message: "Verification email sent again may found it in your spam folder",
       });
     }
 
@@ -129,10 +140,21 @@ async function createuser(req, res) {
   newuser.email,
   "Verify your email",
   `
-  <h2>Welcome!</h2>
+  <h2>Welcome to BlogApp</h2>
+
+<p>Thank you for creating an account.</p>
+
+<p>Please verify your email address by clicking the button below:</p>
+
+<p>
   <a href="${FRONTEND_URL}/verify-email/${verificationtoken}">
-    Click here to verify your account
+    Verify Email Address
   </a>
+</p>
+
+<p>If you did not create this account, you can safely ignore this email.</p>
+
+<p>Regards,<br/>BlogApp Team</p>
   `
 );
 
@@ -143,7 +165,7 @@ async function createuser(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: "User created. Check email to verify account.",
+      message: "User created. Verify email you may found it in the spam folder of your gmail",
     });
 
   } catch (err) {
@@ -309,7 +331,7 @@ console.log("PASSWORD FROM DB:", check.password);
     if (!check.verify) {
       return res.status(400).json({
         success: false,
-        message: "Please verify your email first",
+        message: "Please verify your email first. Check your inbox or spam folder.",
       });
     }
 

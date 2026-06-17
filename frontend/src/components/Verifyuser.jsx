@@ -19,7 +19,7 @@ function Verifyuser() {
         toast.success(res.data.message);
         navigate("/signin");
       } catch (error) {
-        toast.error(error);
+        toast.error(error?.message || error);
       } finally {
         navigate("/signin");
       }

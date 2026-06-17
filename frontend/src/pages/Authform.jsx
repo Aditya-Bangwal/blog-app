@@ -28,8 +28,10 @@ function Authform({ type }) {
       );
 
       if (type == "signup") {
-        toast.success(res.data.message);
-        navigate("/signin");
+         toast.success(
+    "Account created successfully. Please check your email (or spam folder) and verify your account."
+  );
+  return;
       } else {
         console.log("LOGIN RESPONSE:", res.data.user);
         console.log("LOGIN RESPONSE:", res.data);
